@@ -42,32 +42,30 @@ class HomeController extends GetxController{
     "Tout est prêt !"
   ];
   var waitingMessage = "".obs;
-  late final Timer _waitingMessageTimer;
+  late Timer _waitingMessageTimer;
 
   // progress bar
   var progressNotifier = ValueNotifier<double>(0);
-  late final Timer _progressTimer;
+  late Timer _progressTimer;
 
   void progressCallBackTimer(timer){
     logger.d(timer.tick);
     progressNotifier.value += 20;
-    logger.d(" progress : ${progressNotifier.value}");
+    // logger.d(" progress : ${progressNotifier.value}");
     getNextCityWeatherReport();
     if(timer.tick == 5){
       timer.cancel();
       _waitingMessageTimer.cancel();
       waitingMessage.value = _waitingMessages[3];
-      Timer(const Duration(seconds: 12), (){
+      Timer(const Duration(seconds: 10), (){
         isLoading.value = false;
-        for(var i = 0; i < cities.length; i++){
-          logger.i(weatherReports[i]);
-        }
       });
     }
   }
 
   void waitingMessageCallBackTimer(timer){
     waitingMessage.value = _waitingMessages[timer.tick%3];
+    // logger.d("waiting message : ${waitingMessage.value}");
     if(!isLoading.value){
       timer.cancel();
       waitingMessage.value = "";
@@ -89,9 +87,13 @@ class HomeController extends GetxController{
 
   void refreshTimer(){
     isLoading.value = true;
-    progressNotifier.value = 10;
+
+    progressNotifier.value = 0;
     _progressTimer.cancel();
-    _progressTimer = Timer.periodic(const Duration(seconds: 12), progressCallBackTimer);
+  _progressTimer = Timer.periodic(const Duration(seconds: 12), progressCallBackTimer);
+
+    _waitingMessageTimer.cancel();
+    waitingMessage.value = _waitingMessages[0];
     _waitingMessageTimer = Timer.periodic(const Duration(seconds: 6), waitingMessageCallBackTimer);
   }
 }

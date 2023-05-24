@@ -32,6 +32,11 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.menu),
+          ),
           title: const Text("Weather App"),
           actions: [
             IconButton(
@@ -82,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                             WeatherCard(weatherReport: weatherReport),
                           ElevatedButton(
                             onPressed: () {
-                              Get.offAndToNamed("/home");
+                              homeController.refreshTimer();
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF654888),
